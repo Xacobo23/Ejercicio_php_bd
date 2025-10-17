@@ -6,7 +6,7 @@ create table IF NOT EXISTS Student (
     age int
     );
 
-insert into student (dni, name, surname, age) 
+insert into Student (dni, name, surname, age) 
 values 
     ("11111111A","Draco","Malfoy",25),
     ("22222222B","Hermione","Granger",23),

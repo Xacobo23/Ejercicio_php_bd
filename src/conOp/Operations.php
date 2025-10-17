@@ -75,9 +75,15 @@
 
         public function addStudent($student) {
             try{
+                $this->conn->beginTransaction();
                 $sqlString = "insert into Student (dni, name, surname, age) VALUES (?, ?, ?, ?)";
-                
-                return "a";
+                $stmt = $this->conn->prepare($sqlString);
+                $name = $student->getName();
+                $surname = $student->getSurname();
+                $dni = $student->getDni();
+                $age = $student->getAge();
+                $stmt->execute([$dni, $name, $surname, $age]);
+                $this->conn->commit();
             }
             catch(PDOException $erro){
                 // roll back the transaction if something failed

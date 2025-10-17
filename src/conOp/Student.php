@@ -6,6 +6,15 @@
         private $surname;
         private $age;
 
+        // public function __construct($dni, $name, $surname, $age)
+        // {
+        // $this->dni = $dni;
+        // $this->name = $name;
+        // $this->surname = $surname;
+        // $this->age = $age;
+        // }
+
+
         public function __toString() : String
         {
             return "[".$this->id."]"."{".$this->dni." / ".$this->name." ".$this->surname."}";

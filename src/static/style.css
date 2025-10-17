@@ -76,7 +76,7 @@
 #searchForm{
     width: 70%;
     display: grid;
-    grid-template-columns: 1fr 2fr 2fr 2fr 1fr;
+    grid-template-columns: 1fr 2fr 2fr;
         margin-right: 2%;
 
 }

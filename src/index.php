@@ -1,4 +1,14 @@
 <?php
+    $nameErr = $surnameErr = $dniErr = $ageErr = "";
+    $name = $surname = $dni = $age = "";
+
+    function test_input($data) {
+        $data = trim($data);
+        $data = stripslashes($data);
+        $data = htmlspecialchars($data);
+        return $data;
+    }
+
     require_once "conOp/Operations.php";
     try {
         $oper = new Operations();
@@ -19,6 +29,58 @@
                 header("Location: " . $_SERVER['PHP_SELF']);
                 exit;
             }
+            
+            $hasError = false;
+            
+            if (isset($_POST['add'])) {
+                if (empty($_POST["name"])) {
+                    $nameErr = "Name is required";
+                    $hasError = true;
+
+                } else {
+                    $name = test_input($_POST["name"]);
+                }
+
+                if (empty($_POST["surname"])) {
+                    $surnameErr = "Surname is required";
+                    $hasError = true;
+                } else {
+                    $surname = test_input($_POST["surname"]);
+                }
+
+                if (empty($_POST["dni"])) {
+                    $dniErr = "DNI is required";
+                    $hasError = true;
+                } else {
+                    $dni = test_input($_POST["dni"]);
+                }
+
+                if (empty($_POST["age"])) {
+                    $ageErr = "Age is required";
+                    $hasError = true;
+                } else {
+                    $age = test_input($_POST["age"]);
+                }
+
+                if(!$hasError){
+                    $student = new Student();
+                    $student->setDni($dni);
+                    $student->setName($name);
+                    $student->setSurname($surname);
+                    $student->setAge($age);
+                    $oper->addStudent($student);
+
+                    header("Location: " . $_SERVER['PHP_SELF']);
+                    exit;
+                }
+                else{
+                    echo "<p style='color:red'>Errores:</p>";
+                    echo $nameErr ? "<p>$nameErr</p>" : "";
+                    echo $surnameErr ? "<p>$surnameErr</p>" : "";
+                    echo $dniErr ? "<p>$dniErr</p>" : "";
+                    echo $ageErr ? "<p>$ageErr</p>" : "";
+                }
+            }
         }
     } catch (PDOException $e) {
         echo "<br><p style='color:red;'>".$e->getMessage()."<p>";
@@ -36,7 +98,8 @@
     <title>Document</title>
     <link rel="stylesheet" href="./static/style.css">
 </head>
-</style>
+<script src="static/script.js" defer></script>
+
 <body>
     <h2>Lista alumnos</h2>
     
@@ -44,17 +107,19 @@
     <div id="tabla">
         <div class="search">
             <form id="searchForm" method="post">
-                <label for="id">
-                    ID:<input id="Id" name="id" type="number" >
+                <select id="searchType" name="searchType">
+                    <option value="id">ID</option>
+                    <option value="dni">DNI</option>
+                    <option value="name">Name</option>
+                    <option value="surname">Surname</option>
+                    <option value="age">Age</option>
+                </select>
+                <label for="searchInput" style="display: flex;">
+                    <input id="searchInput" name="searchValue" type="number" placeholder="Enter a number" >
                 </label>
-                
-                <input type="text">
-                <input type="text">
-                <input type="text">
-                <input style="padding-left: 15px;" type="number" min="5" max="50" placeholder="5">
             </form>
             <div class="buttonSearch">
-                <button class="bUpDel">add</button>
+                <button class="bUpDel">Search</button>
             </div>
         </div>
         <br><br>
@@ -77,16 +142,15 @@
         <div class="add">
             <form id="addForm" method="post">
                 <input id="Id" name="id" type="text" value="<?=$nextID?>" disabled>
-                <input type="text" placeholder="12345678A">
-                <input type="text" placeholder="Pepito">
-                <input type="text" placeholder="Gomez">
-                <input style="padding-left: 15px;" type="number" min="5" max="50" placeholder="5">
+                <input type="text" name="dni" placeholder="12345678A">
+                <input type="text" name="name" placeholder="Pepito">
+                <input type="text" name="surname" placeholder="Gomez">
+                <input name="age" style="padding-left: 15px;" type="number" min="5" max="50" placeholder="5">
+                <button class="buttonAdd" name="add" type="submit" class="bUpDel">add</button>
             </form>
-            <div class="buttonAdd">
-                <button class="bUpDel">add</button>
-            </div>
         </div>
     </div>
 
 </body>
 </html>
+
