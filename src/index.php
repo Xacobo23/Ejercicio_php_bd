@@ -86,7 +86,11 @@
                 if (empty($_POST["searchValue"])) {
                     $searchValueErr = "Value is required"
                 } else {
-                    $name = test_input($_POST["name"]);
+                    $searchValue = test_input($_POST["searchValue"])
+                    if($_POST["searchType"]=="default")
+                    else{
+                        $oper->searchByValue($_POST["searchType"], $searchValue)
+                    }
                 }
             }
         }
