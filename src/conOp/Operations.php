@@ -106,7 +106,70 @@
             }
         }
 
+
+        public function searchByValue($searchType, $searchValue){
+
+            $validFields = ['id', 'dni', 'name', 'surname', 'age'];
+            if (!in_array($searchType, $validFields)) {
+                throw new Exception("Campo de búsqueda no válido.");
+            }
+
+            $sqlString = "select * from Student where $searchType like ?";
+
+            try{
+                $query = $this->conn->prepare($sqlString);
+
+                $searchValue = "%" . $searchValue . "%"; //esto e para que devolva todas as coincidencias dese tipo
+                $query->execute([$searchValue]);
+    
+                $list = array();
+    
+                while($qElement = $query->fetch()){
+                    $student = new Student();
+                    $student->setId($qElement['id']);
+                    $student->setDni($qElement['dni'] ?? null);
+                    $student->setName($qElement['name'] ?? null);
+                    $student->setSurname($qElement['surname'] ?? null);
+                    $student->setAge($qElement['age'] ?? null);
+                    $list[] = $student;
+                }
+                return $list;
+            }
+            catch(PDOException $e) {
+                // roll back the transaction if something failed
+                $this->conn->rollback();
+                throw $e;
+            }
+            
+        }
         
+        public function searchDefault($value){
+            $sqlString = "select * from Student where id=?";
+
+            try{
+                $query = $this->conn->prepare($sqlString);
+                $query->execute([$id]);
+    
+                $list = array();
+    
+                while($qElement = $query->fetch()){
+                    $student = new Student();
+                    $student->setId($qElement['id']);
+                    $student->setDni($qElement['dni'] ?? null);
+                    $student->setName($qElement['name'] ?? null);
+                    $student->setSurname($qElement['surname'] ?? null);
+                    $student->setAge($qElement['age'] ?? null);
+                    $list[] = $student;
+                }
+                return $list;
+            }
+            catch(PDOException $e) {
+                // roll back the transaction if something failed
+                $this->conn->rollback();
+                throw $e;
+            }
+            
+        }
 
 
     }

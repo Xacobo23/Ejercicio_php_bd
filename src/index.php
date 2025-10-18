@@ -1,6 +1,6 @@
 <?php
-    $nameErr = $surnameErr = $dniErr = $ageErr = "";
-    $name = $surname = $dni = $age = "";
+    $nameErr = $surnameErr = $dniErr = $ageErr = $searchValueErr = "";
+    $name = $surname = $dni = $age = $searchValue = "";
 
     function test_input($data) {
         $data = trim($data);
@@ -81,6 +81,14 @@
                     echo $ageErr ? "<p>$ageErr</p>" : "";
                 }
             }
+
+            if (isset($_POST['search'])) {
+                if (empty($_POST["searchValue"])) {
+                    $searchValueErr = "Value is required"
+                } else {
+                    $name = test_input($_POST["name"]);
+                }
+            }
         }
     } catch (PDOException $e) {
         echo "<br><p style='color:red;'>".$e->getMessage()."<p>";
@@ -117,10 +125,8 @@
                 <label for="searchInput" style="display: flex;">
                     <input id="searchInput" name="searchValue" type="number" placeholder="Enter a number" >
                 </label>
+                <button name="search" class="bUpDel">Search</button>
             </form>
-            <div class="buttonSearch">
-                <button class="bUpDel">Search</button>
-            </div>
         </div>
         <br><br>
         <?php foreach ($students as $student): ?>
