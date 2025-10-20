@@ -142,36 +142,21 @@
             }
             
         }
-        
-        public function searchDefault($value){
-            $sqlString = "select * from Student where id=?";
 
-            try{
-                $query = $this->conn->prepare($sqlString);
-                $query->execute([$id]);
-    
-                $list = array();
-    
-                while($qElement = $query->fetch()){
-                    $student = new Student();
-                    $student->setId($qElement['id']);
-                    $student->setDni($qElement['dni'] ?? null);
-                    $student->setName($qElement['name'] ?? null);
-                    $student->setSurname($qElement['surname'] ?? null);
-                    $student->setAge($qElement['age'] ?? null);
-                    $list[] = $student;
-                }
-                return $list;
-            }
-            catch(PDOException $e) {
-                // roll back the transaction if something failed
-                $this->conn->rollback();
-                throw $e;
-            }
-            
+        public function updateStudent(Student $student) {
+            $stmt = $this->conn->prepare("UPDATE Student SET dni=?, name=?, surname=?, age=? WHERE id=?");
+            $stmt->execute([
+                $student->getDni(),
+                $student->getName(),
+                $student->getSurname(),
+                $student->getAge(),
+                $student->getId()
+            ]);
         }
 
+        
 
+        
     }
 
 ?>
